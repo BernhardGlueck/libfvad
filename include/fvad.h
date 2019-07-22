@@ -12,6 +12,21 @@
 #ifndef FVAD_H_
 #define FVAD_H_
 
+#if defined(_MSC_VER)
+ //  Microsoft 
+#define EXPORT __declspec(dllexport)
+#define IMPORT __declspec(dllimport)
+#elif defined(__GNUC__)
+ //  GCC
+#define EXPORT __attribute__((visibility("default")))
+#define IMPORT
+#else
+ //  do nothing and hope for the best?
+#define EXPORT
+#define IMPORT
+#pragma warning Unknown dynamic link import/export semantics.
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -33,19 +48,19 @@ typedef struct Fvad Fvad;
  *
  * Returns NULL in case of a memory allocation error.
  */
-Fvad *fvad_new();
+EXPORT Fvad *fvad_new();
 
 /*
  * Frees the dynamic memory of a specified VAD instance.
  */
-void fvad_free(Fvad *inst);
+EXPORT void fvad_free(Fvad *inst);
 
 
 /*
  * Reinitializes a VAD instance, clearing all state and resetting mode and
  * sample rate to defaults.
  */
-void fvad_reset(Fvad *inst);
+EXPORT void fvad_reset(Fvad *inst);
 
 
 /*
@@ -61,7 +76,7 @@ void fvad_reset(Fvad *inst);
  *
  * Returns 0 on success, or -1 if the specified mode is invalid.
  */
-int fvad_set_mode(Fvad* inst, int mode);
+EXPORT int fvad_set_mode(Fvad* inst, int mode);
 
 
 /*
@@ -73,7 +88,7 @@ int fvad_set_mode(Fvad* inst, int mode);
  *
  * Returns 0 on success, or -1 if the passed value is invalid.
  */
-int fvad_set_sample_rate(Fvad* inst, int sample_rate);
+EXPORT fvad_set_sample_rate(Fvad* inst, int sample_rate);
 
 
 /*
@@ -87,7 +102,7 @@ int fvad_set_sample_rate(Fvad* inst, int sample_rate);
  *                        0 - (non-active Voice),
  *                       -1 - (invalid frame length).
  */
-int fvad_process(Fvad* inst, const int16_t* frame, size_t length);
+EXPORT int fvad_process(Fvad* inst, const int16_t* frame, size_t length);
 
 #ifdef __cplusplus
 }
